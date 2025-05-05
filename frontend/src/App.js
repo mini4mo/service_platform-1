@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import OrderForm from './OrderForm';
+import OrderHistory from './OrderHistory';
 
 function RegisterForm({ setToken, setUserId }) {
   const [username, setUsername] = useState('');
@@ -11,7 +13,7 @@ function RegisterForm({ setToken, setUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post('[invalid url, do not cite] {
         username,
         email,
         password
@@ -75,7 +77,7 @@ function LoginForm({ setToken, setUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('[invalid url, do not cite] {
         email,
         password
       });
@@ -122,79 +124,17 @@ function LoginForm({ setToken, setUserId }) {
   );
 }
 
-function OrderForm({ token }) {
-  const [startLocation, setStartLocation] = useState('');
-  const [endLocation, setEndLocation] = useState('');
-  const [serviceType, setServiceType] = useState('taxi');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/api/orders', {
-        service_type: serviceType,
-        start_location: startLocation,
-        end_location: endLocation
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      console.log('Order placed:', response.data);
-      setError('');
-    } catch (error) {
-      setError(error.response?.data?.error || 'Ошибка при создании заказа');
-    }
-  };
-
-  return (
-    <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Разместить заказ</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div>
-        <label className="block mb-2">Тип услуги</label>
-        <select
-          value={serviceType}
-          onChange={(e) => setServiceType(e.target.value)}
-          className="w-full p-2 border rounded"
-        >
-          <option value="taxi">Такси</option>
-          <option value="food_delivery">Доставка еды</option>
-          <option value="other">Другое</option>
-        </select>
-      </div>
-      <div>
-        <label className="block mb-2">Откуда</label>
-        <input
-          type="text"
-          placeholder="Начальная точка"
-          value={startLocation}
-          onChange={(e) => setStartLocation(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
-      <div>
-        <label className="block mb-2">Куда</label>
-        <input
-          type="text"
-          placeholder="Конечная точка"
-          value={endLocation}
-          onChange={(e) => setEndLocation(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-      </div>
-      <button
-        onClick={handleSubmit}
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Разместить заказ
-      </button>
-    </div>
-  );
-}
-
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [userId, setUserId] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
+  const [view, setView] = useState('orderForm');
+
+  const handleLogout = () => {
+    setToken('');
+    setUserId(null);
+    localStorage.removeItem('token');
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -222,19 +162,30 @@ function App() {
           </>
         )
       ) : (
-        <>
-          <button
-            onClick={() => {
-              setToken('');
-              setUserId(null);
-              localStorage.removeItem('token');
-            }}
-            className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Выйти
-          </button>
-          <OrderForm token={token} />
-        </>
+        <div>
+          <div className="mb-4">
+            <button
+              onClick={() => setView('orderForm')}
+              className={`mr-2 px-4 py-2 rounded ${view === 'orderForm' ? 'bg-blue-700' : 'bg-blue-500'} text-white hover:bg-blue-600`}
+            >
+              Place Order
+            </button>
+            <button
+              onClick={() => setView('orderHistory')}
+              className={`mr-2 px-4 py-2 rounded ${view === 'orderHistory' ? 'bg-blue-700' : 'bg-blue-500'} text-white hover:bg-blue-600`}
+            >
+              Order History
+            </button>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Logout
+            </button>
+          </div>
+          {view === 'orderForm' && <OrderForm token={token} />}
+          {view === 'orderHistory' && <OrderHistory token={token} />}
+        </div>
       )}
     </div>
   );

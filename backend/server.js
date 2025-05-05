@@ -11,12 +11,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: '[invalid url, do not cite]
         methods: ['GET', 'POST']
     }
 });
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: '[invalid url, do not cite] }));
 app.use(express.json());
 
 const pool = mysql.createPool({
@@ -41,6 +41,19 @@ const authenticateToken = (req, res, next) => {
         next();
     });
 };
+
+// Игнорировать запросы к favicon.ico
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
+// Тестовый маршрут для корневого пути
+app.get('/', (req, res) => {
+    res.json({ 
+        message: 'Service Platform API is running!',
+        info: 'This is the backend API. To access the application, open the frontend at [invalid url, do not cite]
+    });
+});
 
 // Регистрация пользователя
 app.post('/api/register', async (req, res) => {
@@ -77,39 +90,5 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Создание заказа (защищенный маршрут)
-app.post('/api/orders', authenticateToken, async (req, res) => {
-    try {
-        const { service_type, start_location, end_location } = req.body;
-        const user_id = req.user.userId;
-        const [result] = await pool.execute(
-            'INSERT INTO orders (user_id, service_type, status, start_location, end_location) VALUES (?, ?, ?, ?, ?)',
-            [user_id, service_type, 'pending', start_location, end_location]
-        );
-        io.emit('order_update', { order_id: result.insertId, status: 'pending' });
-        res.status(201).json({ order_id: result.insertId });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Чат поддержки
-io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
-    socket.on('send_message', async (data) => {
-        try {
-            const { user_id, message } = data;
-            await pool.execute(
-                'INSERT INTO support_chats (user_id, message, is_from_support) VALUES (?, ?, ?)',
-                [user_id, message, false]
-            );
-            io.emit('receive_message', { user_id, message, created_at: new Date() });
-        } catch (error) {
-            console.error('Error saving message:', error);
-        }
-    });
-});
-
-server.listen(5000, () => {
-    console.log('Server running on port 5000');
-});
+// Получение заказов пользователя
+app.get('/api/orders', authenticateToken, async (req, res
