@@ -13,30 +13,30 @@ function RegisterForm({ setToken, setUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('[invalid url, do not cite] {
+      const response = await axios.post('http://localhost:5000/api/register', {
         username,
         email,
         password
       });
-      alert('Регистрация успешна! Пожалуйста, войдите.');
+      alert('Registration successful! Please log in.');
       setError('');
     } catch (error) {
-      setError(error.response?.data?.error || 'Ошибка регистрации');
+      setError(error.response?.data?.error || 'Registration error');
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Регистрация</h2>
+      <h2 className="text-xl font-bold mb-4">Registration</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div>
-        <label className="block mb-2">Имя пользователя</label>
+        <label className="block mb-2">Username</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Введите имя"
+          placeholder="Enter username"
         />
       </div>
       <div>
@@ -46,24 +46,24 @@ function RegisterForm({ setToken, setUserId }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Введите email"
+          placeholder="Enter email"
         />
       </div>
       <div>
-        <label className="block mb-2">Пароль</label>
+        <label className="block mb-2">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Введите пароль"
+          placeholder="Enter password"
         />
       </div>
       <button
         onClick={handleSubmit}
         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Зарегистрироваться
+        Register
       </button>
     </div>
   );
@@ -77,7 +77,7 @@ function LoginForm({ setToken, setUserId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('[invalid url, do not cite] {
+      const response = await axios.post('http://localhost:5000/api/login', {
         email,
         password
       });
@@ -86,13 +86,13 @@ function LoginForm({ setToken, setUserId }) {
       localStorage.setItem('token', response.data.token);
       setError('');
     } catch (error) {
-      setError(error.response?.data?.error || 'Ошибка авторизации');
+      setError(error.response?.data?.error || 'Login error');
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Вход</h2>
+      <h2 className="text-xl font-bold mb-4">Login</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div>
         <label className="block mb-2">Email</label>
@@ -101,24 +101,24 @@ function LoginForm({ setToken, setUserId }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Введите email"
+          placeholder="Enter email"
         />
       </div>
       <div>
-        <label className="block mb-2">Пароль</label>
+        <label className="block mb-2">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Введите пароль"
+          placeholder="Enter password"
         />
       </div>
       <button
         onClick={handleSubmit}
         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Войти
+        Login
       </button>
     </div>
   );
@@ -138,7 +138,7 @@ function App() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Сервисная платформа</h1>
+      <h1 className="text-2xl font-bold mb-4">Service Platform</h1>
       {!token ? (
         showRegister ? (
           <>
@@ -147,7 +147,7 @@ function App() {
               onClick={() => setShowRegister(false)}
               className="mt-4 text-blue-500 hover:underline"
             >
-              Уже есть аккаунт? Войти
+              Already have an account? Login
             </button>
           </>
         ) : (
@@ -157,7 +157,7 @@ function App() {
               onClick={() => setShowRegister(true)}
               className="mt-4 text-blue-500 hover:underline"
             >
-              Нет аккаунта? Зарегистрироваться
+              No account? Register
             </button>
           </>
         )

@@ -8,7 +8,7 @@ const OrderHistory = ({ token }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('[invalid url, do not cite] {
+        const response = await axios.get('http://localhost:5000/api/orders', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setOrders(response.data);

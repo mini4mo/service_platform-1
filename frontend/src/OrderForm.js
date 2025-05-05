@@ -28,11 +28,11 @@ const OrderForm = ({ token }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!startLocation || !endLocation) {
-      setError('Пожалуйста, выберите начальную и конечную точки');
+      setError('Please select both start and end locations');
       return;
     }
     try {
-      const response = await axios.post('[invalid url, do not cite] {
+      const response = await axios.post('http://localhost:5000/api/orders', {
         service_type: serviceType,
         start_location: startLocation,
         end_location: endLocation
@@ -45,7 +45,7 @@ const OrderForm = ({ token }) => {
       setEndLocation('');
       setServiceType('taxi');
     } catch (err) {
-      setError(err.response?.data?.error || 'Ошибка при создании заказа');
+      setError(err.response?.data?.error || 'Error placing order');
       console.error(err);
     }
   };
@@ -53,34 +53,34 @@ const OrderForm = ({ token }) => {
   return (
     <GeoapifyContext apiKey={process.env.REACT_APP_GEOAPIFY_API_KEY}>
       <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4">Разместить заказ</h2>
+        <h2 className="text-xl font-bold mb-4">Place Order</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div>
-            <label className="block mb-2">Тип услуги</label>
+            <label className="block mb-2">Service Type</label>
             <select
               value={serviceType}
               onChange={(e) => setServiceType(e.target.value)}
               className="w-full p-2 border rounded"
             >
-              <option value="taxi">Такси</option>
-              <option value="food_delivery">Доставка еды</option>
-              <option value="other">Другое</option>
+              <option value="taxi">Taxi</option>
+              <option value="food_delivery">Food Delivery</option>
+              <option value="other">Other</option>
             </select>
           </div>
           <div>
-            <label className="block mb-2">Откуда</label>
+            <label className="block mb-2">From</label>
             <GeoapifyGeocoderAutocomplete
               placeSelect={handleStartSelect}
-              placeholder="Начальная точка"
+              placeholder="Start Location"
               className="w-full p-2 border rounded"
             />
           </div>
           <div>
-            <label className="block mb-2">Куда</label>
+            <label className="block mb-2">To</label>
             <GeoapifyGeocoderAutocomplete
               placeSelect={handleEndSelect}
-              placeholder="Конечная точка"
+              placeholder="End Location"
               className="w-full p-2 border rounded"
             />
           </div>
@@ -88,7 +88,7 @@ const OrderForm = ({ token }) => {
             type="submit"
             className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
-            Разместить заказ
+            Place Order
           </button>
         </form>
       </div>

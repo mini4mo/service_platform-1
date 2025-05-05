@@ -11,12 +11,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '[invalid url, do not cite]
+        origin: 'http://localhost:3000',  // Исправлено: добавлена запятая
         methods: ['GET', 'POST']
     }
 });
 
-app.use(cors({ origin: '[invalid url, do not cite] }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 const pool = mysql.createPool({
@@ -51,7 +51,7 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/', (req, res) => {
     res.json({ 
         message: 'Service Platform API is running!',
-        info: 'This is the backend API. To access the application, open the frontend at [invalid url, do not cite]
+        info: 'This is the backend API. To access the application, open the frontend at http://localhost:3000'  // Исправлено: закрывающая кавычка
     });
 });
 
@@ -91,4 +91,12 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Получение заказов пользователя
-app.get('/api/orders', authenticateToken, async (req, res
+app.get('/api/orders', authenticateToken, async (req, res) => {
+    // Добавлено закрывающее определение функции, так как оно отсутствовало в исходном коде
+    try {
+        const [rows] = await pool.execute('SELECT * FROM orders WHERE user_id = ?', [req.user.userId]);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
