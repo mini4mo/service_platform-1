@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
-import OrderForm from './OrderForm';
-import OrderHistory from './OrderHistory';
+import Dashboard from '.src/components/dashboard.js';
 
 function RegisterForm({ setToken, setUserId }) {
   const [username, setUsername] = useState('');
@@ -18,25 +17,25 @@ function RegisterForm({ setToken, setUserId }) {
         email,
         password
       });
-      alert('Registration successful! Please log in.');
+      alert('Регистрация успешна! Пожалуйста, войдите.');
       setError('');
     } catch (error) {
-      setError(error.response?.data?.error || 'Registration error');
+      setError(error.response?.data?.error || 'Ошибка регистрации');
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Registration</h2>
+      <h2 className="text-xl font-bold mb-4">Регистрация</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div>
-        <label className="block mb-2">Username</label>
+        <label className="block mb-2">Имя пользователя</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Enter username"
+          placeholder="Введите имя"
         />
       </div>
       <div>
@@ -46,24 +45,24 @@ function RegisterForm({ setToken, setUserId }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Enter email"
+          placeholder="Введите email"
         />
       </div>
       <div>
-        <label className="block mb-2">Password</label>
+        <label className="block mb-2">Пароль</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Enter password"
+          placeholder="Введите пароль"
         />
       </div>
       <button
         onClick={handleSubmit}
         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Register
+        Зарегистрироваться
       </button>
     </div>
   );
@@ -84,15 +83,16 @@ function LoginForm({ setToken, setUserId }) {
       setToken(response.data.token);
       setUserId(response.data.userId);
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
       setError('');
     } catch (error) {
-      setError(error.response?.data?.error || 'Login error');
+      setError(error.response?.data?.error || 'Ошибка авторизации');
     }
   };
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Login</h2>
+      <h2 className="text-xl font-bold mb-4">Вход</h2>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <div>
         <label className="block mb-2">Email</label>
@@ -101,24 +101,24 @@ function LoginForm({ setToken, setUserId }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Enter email"
+          placeholder="Введите email"
         />
       </div>
       <div>
-        <label className="block mb-2">Password</label>
+        <label className="block mb-2">Пароль</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="w-full p-2 border rounded"
-          placeholder="Enter password"
+          placeholder="Введите пароль"
         />
       </div>
       <button
         onClick={handleSubmit}
         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Login
+        Войти
       </button>
     </div>
   );
@@ -126,19 +126,19 @@ function LoginForm({ setToken, setUserId }) {
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(localStorage.getItem('userId') || null);
   const [showRegister, setShowRegister] = useState(false);
-  const [view, setView] = useState('orderForm');
 
   const handleLogout = () => {
     setToken('');
     setUserId(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Service Platform</h1>
+      <h1 className="text-2xl font-bold mb-4">Сервисная платформа</h1>
       {!token ? (
         showRegister ? (
           <>
@@ -147,7 +147,7 @@ function App() {
               onClick={() => setShowRegister(false)}
               className="mt-4 text-blue-500 hover:underline"
             >
-              Already have an account? Login
+              Уже есть аккаунт? Войти
             </button>
           </>
         ) : (
@@ -157,35 +157,22 @@ function App() {
               onClick={() => setShowRegister(true)}
               className="mt-4 text-blue-500 hover:underline"
             >
-              No account? Register
+              Нет аккаунта? Зарегистрироваться
             </button>
           </>
         )
       ) : (
-        <div>
-          <div className="mb-4">
-            <button
-              onClick={() => setView('orderForm')}
-              className={`mr-2 px-4 py-2 rounded ${view === 'orderForm' ? 'bg-blue-700' : 'bg-blue-500'} text-white hover:bg-blue-600`}
-            >
-              Place Order
-            </button>
-            <button
-              onClick={() => setView('orderHistory')}
-              className={`mr-2 px-4 py-2 rounded ${view === 'orderHistory' ? 'bg-blue-700' : 'bg-blue-500'} text-white hover:bg-blue-600`}
-            >
-              Order History
-            </button>
+        <>
+          <div className="flex justify-end mb-4">
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
-              Logout
+              Выйти
             </button>
           </div>
-          {view === 'orderForm' && <OrderForm token={token} />}
-          {view === 'orderHistory' && <OrderHistory token={token} />}
-        </div>
+          <Dashboard token={token} userId={userId} />
+        </>
       )}
     </div>
   );
