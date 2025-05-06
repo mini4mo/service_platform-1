@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GeoapifyGeocoderAutocomplete, GeoapifyContext } from '@geoapify/react-geocoder-autocomplete';
 import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 const OrderForm = ({ token }) => {
   const [startLocation, setStartLocation] = useState('');
   const [endLocation, setEndLocation] = useState('');
   const [serviceType, setServiceType] = useState('taxi');
   const [error, setError] = useState('');
+
+  // Подключение Socket.IO
+  useEffect(() => {
+    const socket = io('http://localhost:5000', {
+      transports: ['websocket', 'polling'], // Поддержка WebSocket и polling
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server');
+    });
+
+    socket.on('newOrder', (order) => {
+      console.log('New order received:', order);
+      alert(`New order: ${order.service_type} from ${order.start_location}`);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('Socket.IO connection error:', err);
+      setError('Could not connect to real-time server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleStartSelect = (value) => {
     if (value && value.properties && value.properties.formatted) {
