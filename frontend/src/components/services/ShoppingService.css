@@ -1,0 +1,226 @@
+.shopping-service-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .shopping-header {
+    margin-bottom: 30px;
+  }
+  
+  .shopping-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  
+  .shopping-subtitle {
+    font-size: 16px;
+    color: #718096;
+  }
+  
+  .store-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .store-category {
+    position: relative;
+    height: 150px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  
+  .store-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .category-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+  
+  .category-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    transition: background 0.3s;
+  }
+  
+  .store-category:hover .category-content {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  
+  .category-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .category-count {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  
+  .popular-stores-section {
+    margin-bottom: 40px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 20px;
+  }
+  
+  .stores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .store-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    background-color: white;
+  }
+  
+  .store-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .store-image {
+    width: 100%;
+    height: 160px;
+    background-color: #e2e8f0;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .store-content {
+    padding: 15px;
+  }
+  
+  .store-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #2d3748;
+  }
+  
+  .store-type {
+    font-size: 14px;
+    color: #718096;
+    margin-bottom: 10px;
+  }
+  
+  .store-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .store-rating {
+    display: flex;
+    align-items: center;
+    color: #f6ad55;
+    font-weight: 500;
+  }
+  
+  .store-rating-star {
+    margin-right: 4px;
+  }
+  
+  .store-delivery-time {
+    color: #718096;
+  }
+  
+  .featured-products {
+    margin-bottom: 30px;
+  }
+  
+  .products-carousel {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  
+  .product-card {
+    min-width: 200px;
+    max-width: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: white;
+  }
+  
+  .product-image {
+    height: 150px;
+    background-color: #e2e8f0;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .product-content {
+    padding: 12px;
+  }
+  
+  .product-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #2d3748;
+  }
+  
+  .product-price {
+    color: #4a5568;
+    font-weight: 500;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .store-categories {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .stores-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .store-categories {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .stores-grid {
+      grid-template-columns: 1fr;
+    }
+  }
